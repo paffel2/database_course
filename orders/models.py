@@ -3,7 +3,6 @@ from employees.models import Employee
 
 class Order(models.Model):
     ORDER_TYPES = [
-        ('hire', 'Прием на работу'),
         ('dismiss', 'Увольнение'),
         ('vacation', 'Отпуск'),
     ]

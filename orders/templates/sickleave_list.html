@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Список больничных</h2>
+<table>
+    <thead>
+        <tr>
+            <th>ФИО</th>
+            <th>Дата начала</th>
+            <th>Дата окончания</th>
+            <th>Номер больничного листа</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sick_leave in sick_leaves %}
+        <tr>
+            <td>{{ sick_leave.employee.fullname }}</td>
+            <td>{{ sick_leave.start_date }}</td>
+            <td>{{ sick_leave.end_date }}</td>
+            <td>{{ sick_leave.sick_number }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

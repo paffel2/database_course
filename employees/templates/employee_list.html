@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Список сотрудников</h2>
+<table>
+    <thead>
+        <tr>
+            <th>ФИО</th>
+            <th>Должность</th>
+            <th>Отдел</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for employee in employees %}
+        <tr>
+            <td>{{ employee.fullname }}</td>
+            <td>{{ employee.position.title }}</td>
+            <td>{{ employee.department.name }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -44,7 +44,6 @@ class Employee(AbstractUser):
     hire_date = models.DateField(verbose_name="Дата найма",null=True,blank=True)
     photo = models.ImageField(upload_to='employees/', blank=True, null=True)
     is_head = models.BooleanField(verbose_name="Глава департамента", default=False)
-    is_working = models.BooleanField(verbose_name="Работает", default=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
