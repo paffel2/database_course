@@ -56,4 +56,7 @@ class EmployeeListView(LoginRequiredMixin, ListView):
         if user.is_superuser:
             return Employee.objects.exclude(id=user.id)
         department = user.department
-        return Employee.objects.filter(department=department).exclude(id=user.id)
+        if user.is_head:
+            return Employee.objects.filter(department=department).exclude(id=user.id)
+        else:
+            return Employee.objects.filter(department=department, is_active=True).exclude(id=user.id)

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  
+    <h2>Создание приказа об увольнении</h2>
+    <br>
+    <div style="margin-top: 20px;">
+        <a href="{% url 'dashboard' %}" class="btn">← Назад в личный кабинет</a>
+    </div>
+    <br>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.order_type }}
+        
+        <div class="form-row">
+            <div class="form-group">
+                {{ form.number.label_tag }}
+                {{ form.number }}
+                {{ form.number.errors }}
+            </div>
+        </div>
+        <br>
+        <div class="form-group">
+            {{ form.employee.label_tag }}
+            {{ form.employee }}
+            {{ form.employee.errors }}
+        </div>
+        <br>
+        <div class="form-group">
+            {{ form.basis.label_tag }}
+            {{ form.basis }}
+            {{ form.basis.errors }}
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Создать приказ</button>
+    </form>
+
+{% endblock %}

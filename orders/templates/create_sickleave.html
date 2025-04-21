@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Создание приказа о больничном</h2>
+    <br>
+    <div style="margin-top: 20px;">
+        <a href="{% url 'dashboard' %}" class="btn">← Назад в личный кабинет</a>
+    </div>
+    <br>
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-row">
+            <div class="form-group">
+                {{ form.order_number.label_tag }}
+                {{ form.order_number }}
+                {{ form.order_number.errors }}
+            </div>
+            <div class="form-group">
+                {{ form.order_date.label_tag }}
+                {{ form.order_date }}
+                {{ form.order_date.errors }}
+            </div>
+        </div>
+        <br>
+        <div class="form-group">
+            {{ form.employee.label_tag }}
+            {{ form.employee }}
+            {{ form.employee.errors }}
+        </div>
+        <br>
+        <div class="form-row">
+            <div class="form-group">
+                {{ form.start_date.label_tag }}
+                {{ form.start_date }}
+                {{ form.start_date.errors }}
+            </div>
+            <br>
+            <div class="form-group">
+                {{ form.end_date.label_tag }}
+                {{ form.end_date }}
+                {{ form.end_date.errors }}
+            </div>
+        </div>
+        <br>
+        <div class="form-group">
+            {{ form.basis.label_tag }}
+            {{ form.basis }}
+            {{ form.basis.errors }}
+        </div>
+        <br>
+        <div class="form-group">
+            {{ form.sick_number.label_tag }}
+            {{ form.sick_number }}
+            {{ form.sick_number.errors }}
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Создать приказ и больничный</button>
+    </form>
+{% endblock %}

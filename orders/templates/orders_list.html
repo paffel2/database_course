@@ -1,0 +1,84 @@
+<!-- templates/orders/list.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+   
+    <h2>Приказы</h2>
+    <br>
+    <div style="margin-top: 20px;">
+        <a href="{% url 'dashboard' %}" class="btn">← Назад в личный кабинет</a>
+    </div>
+    <br>
+    <div>
+        <div style="margin-top: 20px; display: inline-block; margin-right: 10px;">
+            <a href="?type=dismiss" class="btn  {% if request.GET.type == 'dismiss' %}active{% endif %}">
+                Приказы об увольнении
+            </a>
+        </div>
+
+        <div style="margin-top: 20px; display: inline-block; margin-right: 10px;">
+            <a href="?type=hire" class="btn  {% if request.GET.type == 'hire' %}active{% endif %}">
+                Приказы о приеме
+            </a>
+        </div>
+
+        <div style="margin-top: 20px; display: inline-block; margin-right: 10px;">
+            <a href="?type=sickleave" class="btn {% if request.GET.type == 'sickleave' %}active{% endif %}">
+                Приказы о больничном
+            </a>
+        </div>
+
+        <div style="margin-top: 20px; display: inline-block; margin-right: 10px;">
+            <a href="?type=vacation" class="btn {% if request.GET.type == 'vacation' %}active{% endif %}">
+                Приказы об отпуске
+            </a>
+        </div>
+
+        <div style="margin-top: 20px; display: inline-block; margin-right: 10px;">
+            <a href="?" class="btn {% if not request.GET.type %}active{% endif %}">
+                Все приказы
+            </a>
+        </div>
+    </div>
+    <br>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Номер</th>
+                <th>Дата</th>
+                <th>Тип</th>
+                <th>Сотрудник</th>
+                <th>Детали</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.number }}</td>
+                <td>{{ order.date }}</td>
+                <td>{{ order.get_order_type_display }}</td>
+                <td>{{ order.employee.fullname }}</td>
+                <td>
+                    {% if order.order_type == 'dismiss' %}
+                        Увольнение: {{ order.basis|truncatechars:30 }}
+                    {% else %}
+                        {{ order.basis|truncatechars:30 }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+   {# {% include 'includes/pagination.html' %}#}
+
+<style>
+    .btn.active {
+        background: #0056b3;
+    }
+    .filter {
+        display: inline-block;
+    }
+</style>
+{% endblock %}

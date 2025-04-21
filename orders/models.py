@@ -5,6 +5,8 @@ class Order(models.Model):
     ORDER_TYPES = [
         ('dismiss', 'Увольнение'),
         ('vacation', 'Отпуск'),
+        ('hire', 'Прием на работу'),
+        ('sickleave',"Больничный")
     ]
     number = models.CharField(max_length=50, verbose_name="Номер приказа")
     order_type = models.CharField(max_length=50, choices=ORDER_TYPES,verbose_name="Тип приказа")
@@ -20,9 +22,17 @@ class Order(models.Model):
         ordering = ["number"]
 
     def __str__(self):
-        if self.fullname:
+        if self.number:
             return f"Приказ {self.number}"
         return f"Приказ {self.id}"
+    
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+        
+        if self.order_type == 'dismiss' and is_new:
+            self.employee.is_active = False
+            self.employee.save()
 
 class Vacation(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE,verbose_name="Сотрудник")
