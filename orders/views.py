@@ -8,6 +8,7 @@ from django.http import HttpResponseForbidden
 from django.contrib.auth.hashers import make_password
 import random
 import string
+from orders.tasks import send_email
 
 
 class VacationListView(LoginRequiredMixin, ListView):
@@ -146,15 +147,15 @@ class CreateHireOrderView(LoginRequiredMixin, CreateView):
             is_active=True
         )
         
-        # Логируем пароль (в продакшене нужно отправлять на email)
-        print(f"Создан новый сотрудник {employee.email} с паролем: {password}")
-        
         employee.save()
         employee.refresh_from_db()
         order = form.save(commit=False)
         order.order_type = 'hire'
         order.employee = employee
         order.save()
+        
+        ctx = {"email": employee.email,"password":password}
+        send_email.apply_async(["Новый сотрудник","create_email.html",ctx,employee.email])
         
         return super().form_valid(form)
     
