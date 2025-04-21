@@ -30,7 +30,7 @@ class UserAdmin(BaseUserAdmin):
             {"fields": ("fullname", "phone")},
         ),
 
-        ("Статус", {"fields": ("is_staff", "is_superuser", "is_active")}),
+        ("Статус", {"fields": ("is_staff", "is_superuser", "is_active","is_head")}),
         ("Департамент", {"fields":("department",)}),
         ("Должность", {"fields":("position",)})
     )

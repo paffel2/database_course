@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
 <h2>Список сотрудников</h2>
+
+<div style="margin-top: 20px;">
+    <a href="{% url 'dashboard' %}" class="btn">← Назад в личный кабинет</a>
+</div>
+<br>
 <table>
     <thead>
         <tr>
