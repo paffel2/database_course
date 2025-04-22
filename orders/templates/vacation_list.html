@@ -19,11 +19,11 @@
     <tbody>
         {% for vacation in vacations %}
         <tr>
-            <td>{{ vacation.employee.fullname }}</td>
-            <td>{{ vacation.start_date}}</td>
-            <td>{{ vacation.end_date}}</td>
-            <td>{% if vacation.is_paid %}Да{% else %}Нет{%endif%}</td>
-            <td>vacation.order.number</td>
+            <td><a class="tablelink" style="display: block; text-decoration: none"  href="{% url 'update_vacation' pk=vacation.id %}">{{ vacation.employee.fullname }}</a></td>
+            <td><a class="tablelink" style="display: block; text-decoration: none"  href="{% url 'update_vacation' pk=vacation.id %}">{{ vacation.start_date}}</a></td>
+            <td><a class="tablelink" style="display: block; text-decoration: none"  href="{% url 'update_vacation' pk=vacation.id %}">{{ vacation.end_date}}</a></td>
+            <td><a class="tablelink" style="display: block; text-decoration: none"  href="{% url 'update_vacation' pk=vacation.id %}">{% if vacation.is_paid %}Да{% else %}Нет{%endif%}</a></td>
+            <td><a class="tablelink" style="display: block; text-decoration: none"  href="{% url 'update_vacation' pk=vacation.id %}">{{vacation.order.number}}</a></td>
         </tr>
         {% endfor %}
     </tbody>

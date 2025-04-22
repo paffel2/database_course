@@ -32,14 +32,6 @@ class Order(models.Model):
             return f"Приказ {self.number}"
         return f"Приказ {self.id}"
 
-    def save(self, *args, **kwargs):
-        is_new = self.pk is None
-        super().save(*args, **kwargs)
-
-        if self.order_type == "dismiss" and is_new:
-            self.employee.is_active = False
-            self.employee.save()
-
 
 class Vacation(models.Model):
     employee = models.ForeignKey(

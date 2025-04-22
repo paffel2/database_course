@@ -1,4 +1,4 @@
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView
 from django.urls import reverse_lazy
 from orders.models import Vacation, SickLeave, Order
 from orders.forms import (
@@ -6,6 +6,8 @@ from orders.forms import (
     VacationOrderForm,
     SickLeaveOrderForm,
     HireOrderForm,
+    UpdateVacationOrderForm,
+    UpdateSickLeaveOrderForm,
 )
 from employees.models import Employee
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -14,6 +16,7 @@ from django.contrib.auth.hashers import make_password
 import random
 import string
 from orders.tasks import send_email
+from django.contrib import messages
 
 
 class VacationListView(LoginRequiredMixin, ListView):
@@ -50,7 +53,10 @@ class CreateDismissalOrderView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.order_type = "dismiss"
-        form.instance.created_by = self.request.user
+        form.instance.employee = self.request.user
+        dismissed = form.cleaned_data["employee"]
+        dismissed.is_active = False
+        dismissed.save()
         return super().form_valid(form)
 
     def dispatch(self, request, *args, **kwargs):
@@ -89,11 +95,11 @@ class CreateVacationOrderView(LoginRequiredMixin, CreateView):
         vacation = form.save(commit=False)
         vacation.order_number = form.cleaned_data["order_number"]
         vacation.save()
-
+        current_user = self.request.user
         order = Order.objects.create(
             number=form.cleaned_data["order_number"],
             order_type="vacation",
-            employee=form.cleaned_data["employee"],
+            employee=current_user,
             basis=form.cleaned_data["basis"],
         )
         order.refresh_from_db()
@@ -117,11 +123,11 @@ class CreateSickLeaveOrderView(LoginRequiredMixin, CreateView):
         sickleave = form.save(commit=False)
         sickleave.order_number = form.cleaned_data["order_number"]
         sickleave.save()
-
+        current_user = self.request.user
         order = Order.objects.create(
             number=form.cleaned_data["order_number"],
             order_type="vacation",
-            employee=form.cleaned_data["employee"],
+            employee=current_user,
             basis=form.cleaned_data["basis"],
         )
 
@@ -156,11 +162,10 @@ class CreateHireOrderView(LoginRequiredMixin, CreateView):
             is_active=True,
         )
 
-        employee.save()
-        employee.refresh_from_db()
         order = form.save(commit=False)
         order.order_type = "hire"
-        order.employee = employee
+        current_user = self.request.user
+        order.employee = current_user
         order.save()
 
         ctx = {"email": employee.email, "password": password}
@@ -174,4 +179,42 @@ class CreateHireOrderView(LoginRequiredMixin, CreateView):
     def dispatch(self, request, *args, **kwargs):
         if not (request.user.is_head or request.user.is_superuser):
             return HttpResponseForbidden("Только руководители могут создавать приказы")
+        return super().dispatch(request, *args, **kwargs)
+
+
+class UpdateVacationOrderView(LoginRequiredMixin, UpdateView):
+    model = Vacation
+    form_class = UpdateVacationOrderForm
+    template_name = "update_vacation.html"
+    context_object_name = "vacation"
+    success_url = reverse_lazy("vacations")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Отпуск успешно обновлен")
+        return super().form_valid(form)
+
+    def dispatch(self, request, *args, **kwargs):
+        if not (request.user.is_head or request.user.is_superuser):
+            return HttpResponseForbidden(
+                "Только руководители могут редактировать отпуска"
+            )
+        return super().dispatch(request, *args, **kwargs)
+
+
+class UpdateSickLeaveOrderView(LoginRequiredMixin, UpdateView):
+    model = SickLeave
+    form_class = UpdateSickLeaveOrderForm
+    template_name = "update_sickleave.html"
+    context_object_name = "sickleave"
+    success_url = reverse_lazy("sickleaves")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Больничный успешно обновлен")
+        return super().form_valid(form)
+
+    def dispatch(self, request, *args, **kwargs):
+        if not (request.user.is_head or request.user.is_superuser):
+            return HttpResponseForbidden(
+                "Только руководители могут редактировать больничные"
+            )
         return super().dispatch(request, *args, **kwargs)
