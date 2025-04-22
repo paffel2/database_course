@@ -49,7 +49,9 @@ class Vacation(models.Model):
     end_date = models.DateField(verbose_name="Дата окончания", null=True, blank=True)
     vacation_type = models.CharField(max_length=50, verbose_name="Комментарий")
     is_paid = models.BooleanField(default=True, verbose_name="Оплачиваемый отпуск")
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name="Приказ")
+    order = models.ForeignKey(
+        Order, on_delete=models.CASCADE, verbose_name="Приказ", null=True, blank=True
+    )
 
     class Meta:
         verbose_name = "Отпуск"
@@ -66,7 +68,9 @@ class SickLeave(models.Model):
     sick_number = models.CharField(
         max_length=50, verbose_name="Номер больничного листа"
     )
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name="Приказ")
+    order = models.ForeignKey(
+        Order, on_delete=models.CASCADE, verbose_name="Приказ", null=True, blank=True
+    )
 
     class Meta:
         verbose_name = "Больничный"
