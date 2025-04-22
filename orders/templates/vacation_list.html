@@ -13,6 +13,7 @@
             <th>Дата начала</th>
             <th>Дата окончания</th>
             <th>Оплачиваемый</th>
+            <th>Номер приказа</th>
         </tr>
     </thead>
     <tbody>
@@ -22,6 +23,7 @@
             <td>{{ vacation.start_date}}</td>
             <td>{{ vacation.end_date}}</td>
             <td>{% if vacation.is_paid %}Да{% else %}Нет{%endif%}</td>
+            <td>vacation.order.number</td>
         </tr>
         {% endfor %}
     </tbody>

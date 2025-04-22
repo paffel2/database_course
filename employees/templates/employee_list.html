@@ -14,6 +14,7 @@
             <th>ФИО</th>
             <th>Должность</th>
             <th>Отдел</th>
+            <th>Оклад</th>
         </tr>
     </thead>
     <tbody>
@@ -22,6 +23,7 @@
             <td>{{ employee.fullname }}</td>
             <td>{{ employee.position.title }}</td>
             <td>{{ employee.department.name }}</td>
+            <td>{{ employee.position.salary }}</td>
         </tr>
         {% endfor %}
     </tbody>

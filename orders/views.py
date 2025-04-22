@@ -54,7 +54,7 @@ class CreateDismissalOrderView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_head:
+        if not (request.user.is_head or request.user.is_superuser):
             return HttpResponseForbidden("Только руководители могут создавать приказы")
         return super().dispatch(request, *args, **kwargs)
 
@@ -103,7 +103,7 @@ class CreateVacationOrderView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_head:
+        if not (request.user.is_head or request.user.is_superuser):
             return HttpResponseForbidden("Только руководители могут создавать приказы")
         return super().dispatch(request, *args, **kwargs)
 
@@ -131,7 +131,7 @@ class CreateSickLeaveOrderView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_head:
+        if not (request.user.is_head or request.user.is_superuser):
             return HttpResponseForbidden("Только руководители могут создавать приказы")
         return super().dispatch(request, *args, **kwargs)
 
@@ -145,9 +145,6 @@ class CreateHireOrderView(LoginRequiredMixin, CreateView):
         alphabet = string.ascii_letters + string.digits
         password = "".join(random.choices(alphabet, k=12))
 
-        print(
-            form.cleaned_data["email"],
-        )
         employee = Employee.objects.create(
             username=form.cleaned_data["email"],
             email=form.cleaned_data["email"],
@@ -167,13 +164,14 @@ class CreateHireOrderView(LoginRequiredMixin, CreateView):
         order.save()
 
         ctx = {"email": employee.email, "password": password}
-        send_email.apply_async(
-            ["Новый сотрудник", "create_email.html", ctx, employee.email]
-        )
+        print(ctx)
+        # send_email.apply_async(
+        #     ["Новый сотрудник", "create_email.html", ctx, employee.email]
+        # )
 
         return super().form_valid(form)
 
     def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_head:
+        if not (request.user.is_head or request.user.is_superuser):
             return HttpResponseForbidden("Только руководители могут создавать приказы")
         return super().dispatch(request, *args, **kwargs)
